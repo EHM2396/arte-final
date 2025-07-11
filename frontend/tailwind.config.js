@@ -1,18 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: "class",
+  darkMode: 'class',
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       colors: {
-        primary: "#1E3A8A", // azul fuerte
-        secondary: "#F43F5E", // rosa
-        accent: "#10B981", // verde
-      },
-      fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        brand: {
+          primary: "#E91E63",  // magenta
+          secondary: "#3F51B5", // azul
+          accent: "#FFC107",    // amarillo
+          success: "#4CAF50",   // verde
+          info: "#9C27B0",       // púrpura
+        },
       },
     },
   },
   plugins: [],
-};
+}

@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { useDebounce } from "../hooks/useDebounce";
 
 function Home() {
-  const { data, loading, error } = useApi(getTestMessage); // se conecta al endpoint protegido
+  const { data, loading, error } = useApi(getTestMessage);
   const { user, logout } = useAuth();
 
   const [query, setQuery] = useState("");
@@ -27,15 +27,14 @@ function Home() {
 
         {loading && <Loader />}
         {error && <p className="text-red-500">Error: {error}</p>}
-        {/* {data && (
-          <p>
-            Bienvenido, tu correo es: <span className="font-mono">{data.user.email}</span>
-          </p>
-        )} */}
 
-        <Button onClick={() => alert("¡Hola desde Home!")} variant="primary">
-          Click aquí
-        </Button>
+        <div className="flex flex-wrap justify-center gap-2">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="accent">Accent</Button>
+          <Button variant="info">Info</Button>
+          <Button variant="success">Success</Button>
+        </div>
 
         <div className="space-y-2">
           <input
@@ -58,7 +57,7 @@ function Home() {
               <p>
                 Hola {user.name} ({user.email})
               </p>
-              <Button onClick={logout}>Cerrar sesión</Button>
+              <Button onClick={logout} variant="secondary">Cerrar sesión</Button>
             </>
           ) : (
             <p className="text-gray-500">No estás logueado localmente.</p>
