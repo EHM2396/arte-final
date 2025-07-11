@@ -7,7 +7,7 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
-  login: (data: User) => void;
+  login: (data: User, tokens: { accessToken: string, refreshToken: string }) => void;
   logout: () => void;
 };
 
@@ -21,17 +21,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
-  const login = (data: User) => {
+  const login = (data: User, tokens: { accessToken: string, refreshToken: string }) => {
     setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
+    localStorage.setItem("accessToken", tokens.accessToken);
+    localStorage.setItem("refreshToken", tokens.refreshToken);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.href = "/login"; // o usa navigate si prefieres
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

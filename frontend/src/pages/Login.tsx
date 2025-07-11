@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/Card";
@@ -7,6 +8,7 @@ import Loader from "../components/Loader";
 
 function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("test@example.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
@@ -18,9 +20,11 @@ function Login() {
 
     try {
       const data = await loginApi(email, password);
-      localStorage.setItem("token", data.token);
-      login({ name: email, email }); // ajusta según payload real
-      alert("🚀 Login exitoso");
+      login(data.user, {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken
+      });
+      navigate("/"); // 👈 redirige al Home
     } catch (err: any) {
       setError(err.message || "Error al iniciar sesión");
     } finally {

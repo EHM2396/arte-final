@@ -14,21 +14,23 @@ export class AuthController {
       return res.status(401).json({ message: "Usuario o contraseña incorrecta" });
     }
 
+    // Puedes traer name desde tu BD o hardcodearlo por ahora
+    const payload = { userId: user.id, email: user.email, name: user.name || "John Doe" };
+
     // Access token válido por 1 hora
-    const accessToken = jwt.sign(
-      { userId: user.id, email: user.email },
-      SECRET,
-      { expiresIn: "1h" }
-    );
+    const accessToken = jwt.sign(payload, SECRET, { expiresIn: "1h" });
 
     // Refresh token válido por 7 días
-    const refreshToken = jwt.sign(
-      { userId: user.id },
-      SECRET,
-      { expiresIn: "7d" }
-    );
+    const refreshToken = jwt.sign({ userId: user.id }, SECRET, { expiresIn: "7d" });
 
-    return res.json({ accessToken, refreshToken });
+    return res.json({
+      accessToken,
+      refreshToken,
+      user: {
+        name: user.name,
+        email: user.email
+      }
+    });
   }
 
   static async refresh(req: Request, res: Response) {

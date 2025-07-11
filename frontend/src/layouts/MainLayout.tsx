@@ -1,6 +1,8 @@
 import { useDarkMode } from "../hooks/useDarkMode";
 import { Link } from "react-router-dom";
 import { ReactNode } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Sun, Moon } from "lucide-react";
 
 type Props = {
   children: ReactNode;
@@ -8,6 +10,7 @@ type Props = {
 
 export default function MainLayout({ children }: Props) {
   const { theme, toggleTheme } = useDarkMode();
+  const { user, logout } = useAuth();
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -15,20 +18,35 @@ export default function MainLayout({ children }: Props) {
         <Link to="/" className="text-blue-600 font-bold">
           Arte Final
         </Link>
-        <div className="flex space-x-4">
-          <Link to="/login" className="hover:underline">
-            Login
-          </Link>
+        <div className="flex space-x-4 items-center">
+          {user ? (
+            <>
+              <span className="font-semibold">Hola, {user.name}</span>
+              <button
+                onClick={logout}
+                className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="hover:underline">
+              Login
+            </Link>
+          )}
           <button
             onClick={toggleTheme}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+            className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+            title="Cambiar tema"
           >
-            Cambiar a modo {theme === "light" ? "oscuro" : "claro"}
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
         </div>
       </nav>
       <main className="p-4">{children}</main>
-      <footer className="text-center text-xs text-gray-500 py-4">&copy; 2025 Arte Final</footer>
+      <footer className="text-center text-xs text-gray-500 py-4">
+        &copy; 2025 Arte Final
+      </footer>
     </div>
   );
 }
