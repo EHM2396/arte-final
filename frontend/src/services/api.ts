@@ -9,47 +9,71 @@ interface RequestOptions {
 }
 
 /**
- * Llamada genérica al API.
+ * Llamada genérica al API con soporte para JWT
  */
-async function request<T>(
-  endpoint: string,
-  { method = "GET", body, headers = {} }: RequestOptions = {}
-): Promise<T> {
+async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+  let token = localStorage.getItem("accessToken");
+
   const config: RequestInit = {
-    method,
+    method: options.method || "GET",
     headers: {
       "Content-Type": "application/json",
-      ...headers,
+      "Authorization": token ? `Bearer ${token}` : "",
+      ...options.headers,
     },
+    body: options.body ? JSON.stringify(options.body) : undefined,
   };
 
-  if (body) {
-    config.body = JSON.stringify(body);
+  let response = await fetch(`${API_URL}${endpoint}`, config);
+
+  if (response.status === 401 && localStorage.getItem("refreshToken")) {
+    // Intenta refrescar el token
+    const refreshResponse = await fetch(`${API_URL}/api/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken: localStorage.getItem("refreshToken") }),
+    });
+
+    if (refreshResponse.ok) {
+      const data = await refreshResponse.json();
+      localStorage.setItem("accessToken", data.accessToken);
+
+      // Reintenta la request original
+      config.headers = {
+        ...config.headers,
+        "Authorization": `Bearer ${data.accessToken}`,
+      };
+      response = await fetch(`${API_URL}${endpoint}`, config);
+    }
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, config);
-
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(`API error: ${response.status}`);
   }
 
   return response.json() as Promise<T>;
 }
 
 /**
- * Ejemplo de llamada GET al endpoint /api/test
+ * GET al endpoint /api/test
  */
 export function getTestMessage() {
   return request<{ message: string }>("/api/test");
 }
 
 /**
- * Ejemplo de POST al backend.
+ * POST al endpoint /api/login
  */
-export function createSomething(data: { name: string; description: string }) {
-  return request<{ id: number; name: string }>("/api/something", {
+export function loginApi(email: string, password: string) {
+  return request<{ token: string }>("/api/login", {
     method: "POST",
-    body: data,
+    body: { email, password },
   });
+}
+
+/**
+ * GET al endpoint protegido /api/me
+ */
+export function getProfile() {
+  return request<{ user: { email: string } }>("/api/me");
 }

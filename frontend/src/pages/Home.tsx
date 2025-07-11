@@ -8,8 +8,8 @@ import { useAuth } from "../context/AuthContext";
 import { useDebounce } from "../hooks/useDebounce";
 
 function Home() {
-  const { data, loading, error } = useApi(getTestMessage);
-  const { user, login, logout } = useAuth();
+  const { data, loading, error } = useApi(getTestMessage); // se conecta al endpoint protegido
+  const { user, logout } = useAuth();
 
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
@@ -23,17 +23,17 @@ function Home() {
   return (
     <div className="flex flex-col items-center space-y-4">
       <Card className="w-full max-w-md text-center space-y-4">
-        <h1 className="text-2xl font-bold mb-2">🚀 Home con componentes UI</h1>
+        <h1 className="text-2xl font-bold mb-2">🚀 Home JWT + UI</h1>
 
         {loading && <Loader />}
         {error && <p className="text-red-500">Error: {error}</p>}
-        {data && (
+        {/* {data && (
           <p>
-            Backend dice: <span className="font-mono">{data.message}</span>
+            Bienvenido, tu correo es: <span className="font-mono">{data.user.email}</span>
           </p>
-        )}
+        )} */}
 
-        <Button onClick={() => alert("¡Hola!")} variant="primary">
+        <Button onClick={() => alert("¡Hola desde Home!")} variant="primary">
           Click aquí
         </Button>
 
@@ -61,9 +61,7 @@ function Home() {
               <Button onClick={logout}>Cerrar sesión</Button>
             </>
           ) : (
-            <Button onClick={() => login({ name: "John Doe", email: "john@doe.com" })}>
-              Login de prueba
-            </Button>
+            <p className="text-gray-500">No estás logueado localmente.</p>
           )}
         </div>
       </Card>

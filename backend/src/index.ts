@@ -6,6 +6,7 @@ import YAML from 'yamljs';
 import swaggerUi from 'swagger-ui-express';
 
 import testRoutes from './routes/test.routes';
+import authRoutes from './routes/routes';
 import loggerMiddleware from './middlewares/logger';
 import errorHandler from './middlewares/errorHandler';
 
@@ -20,7 +21,11 @@ const swaggerDocument = YAML.load('./swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Rutas
+// get
 app.use('/api/test', testRoutes);
+app.use('/time', testRoutes);
+// post
+app.use('/api', authRoutes);
 
 // Error handler
 app.use(errorHandler);
