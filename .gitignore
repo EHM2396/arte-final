@@ -1,16 +1,34 @@
-# Node
-node_modules
-dist
-.env
+# ===========================================
+# Node modules
+backend/node_modules/
+frontend/node_modules/
 
-# Vite
-frontend/.vite
-frontend/dist
+# ===========================================
+# Builds
+frontend/dist/
+frontend/.vite/
+backend/dist/
+backend/build/
 
+# ===========================================
 # Logs
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 
-# Sistema
+# ===========================================
+# Env
+.env
+*.env
+
+# ===========================================
+# OS files
 .DS_Store
+Thumbs.db
+
+# ===========================================
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
