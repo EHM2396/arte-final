@@ -1,0 +1,16 @@
+# Node
+node_modules
+dist
+.env
+
+# Vite
+frontend/.vite
+frontend/dist
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Sistema
+.DS_Store
