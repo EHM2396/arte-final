@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: Mi API Backend Base
+  version: 1.0.0
+  description: Documentación automática generada con Swagger
+servers:
+  - url: http://localhost:3001/api
+
+paths:
+  /test:
+    get:
+      summary: Endpoint de prueba
+      responses:
+        '200':
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /test/time:
+    get:
+      summary: Obtener fecha y hora desde la DB
+      responses:
+        '200':
+          description: Hora obtenida desde PostgreSQL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dbTime:
+                    type: string
+
